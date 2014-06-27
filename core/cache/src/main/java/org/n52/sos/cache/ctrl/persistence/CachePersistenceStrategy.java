@@ -26,50 +26,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.cache;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.n52.sos.cache.ctrl.ContentCacheControllerImpl;
-import org.n52.sos.cache.ctrl.persistence.CachePersistenceStrategy;
-import org.n52.sos.cache.ctrl.persistence.ImmediatePersistenceStrategy;
-import org.n52.sos.ds.CacheFeederDAORepository;
-import org.n52.sos.ds.MockCacheFeederDAO;
-import org.n52.sos.ogc.ows.OwsExceptionReport;
+package org.n52.sos.cache.ctrl.persistence;
 
 
-public class TestableInMemoryCacheController extends ContentCacheControllerImpl {
-    private static File tempFile;
+import org.n52.sos.cache.ContentCache;
+import org.n52.sos.cache.WritableContentCache;
 
-    public TestableInMemoryCacheController() {
-        super(new ImmediatePersistenceStrategy(tempFile));
-        setUpdateInterval(Integer.MAX_VALUE);
-    }
+import com.google.common.base.Optional;
 
-    public static void setUp() {
-        try {
-            tempFile = File.createTempFile("TestableInMemoryCacheController", "");
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public interface CachePersistenceStrategy {
+    Optional<WritableContentCache> load();
 
-    public static void deleteTempFile() {
-        tempFile.delete();
-    }
+    void persistOnPartialUpdate(ContentCache cache);
 
-    public static File getTempFile() {
-        return tempFile;
-    }
+    void persistOnCompleteUpdate(ContentCache cache);
 
-    @Override
-    public void setCache(WritableContentCache wcc) {
-        super.setCache(wcc);
-    }
+    void persistOnShutdown(ContentCache cache);
 
-    @Override
-    public void update() throws OwsExceptionReport {
-        // noop
-    }
 }
