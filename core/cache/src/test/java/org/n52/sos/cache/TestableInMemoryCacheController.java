@@ -32,10 +32,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.n52.sos.cache.ctrl.ContentCacheControllerImpl;
-import org.n52.sos.cache.ctrl.persistence.CachePersistenceStrategy;
 import org.n52.sos.cache.ctrl.persistence.ImmediatePersistenceStrategy;
-import org.n52.sos.ds.CacheFeederDAORepository;
-import org.n52.sos.ds.MockCacheFeederDAO;
 import org.n52.sos.ogc.ows.OwsExceptionReport;
 
 
@@ -50,7 +47,7 @@ public class TestableInMemoryCacheController extends ContentCacheControllerImpl 
     public static void setUp() {
         try {
             tempFile = File.createTempFile("TestableInMemoryCacheController", "");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -64,7 +61,7 @@ public class TestableInMemoryCacheController extends ContentCacheControllerImpl 
     }
 
     @Override
-    public void setCache(WritableContentCache wcc) {
+    public void setCache(final WritableContentCache wcc) {
         super.setCache(wcc);
     }
 
