@@ -1055,6 +1055,12 @@
                 <artifactId>coding-exi</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!-- PUB-Sub-SOS extension -->
+            <dependency>
+            	<groupId>${project.groupId}</groupId>
+            	<artifactId>pubsub</artifactId>
+            	<version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

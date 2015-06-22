@@ -127,6 +127,10 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>pubsub</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>webapp</artifactId>
 			<type>war</type>
 		</dependency>
