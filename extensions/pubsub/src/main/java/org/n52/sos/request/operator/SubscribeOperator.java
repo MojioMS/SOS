@@ -52,8 +52,8 @@ public class SubscribeOperator extends
     private static final String OPERATION_NAME = PubSubConstants.Operations.Subscribe.name();
 
     // TODO add pub sub conformance classes
-    private static final Set<String> CONFORMANCE_CLASSES = Collections
-            .singleton(ConformanceClasses.SOS_V2_CORE_PROFILE);
+    private static final Set<String> CONFORMANCE_CLASSES = 
+    		Collections.singleton(ConformanceClasses.SOS_V2_CORE_PROFILE);
 
     public SubscribeOperator() {
         super(PubSubConstants.SERVICE,
@@ -88,22 +88,6 @@ public class SubscribeOperator extends
         } catch (OwsExceptionReport owse) {
             exceptions.add(owse);
         }
-//        try {
-//            checkProcedureID(subscribeRequest.getProcedure(), SosConstants.DescribeSensorParams.procedure.name());
-//        } catch (OwsExceptionReport owse) {
-//            exceptions.add(owse);
-//        }
-//        try {
-//            checkProcedureDescriptionFromat(subscribeRequest.getProcedureDescriptionFormat(), subscribeRequest);
-//        } catch (OwsExceptionReport owse) {
-//            exceptions.add(owse);
-//        }
-        // if (sosRequest.isSetValidTime()) {
-        // exceptions.add(new
-        // OptionNotSupportedException().at(Sos2Constants.DescribeSensorParams.validTime)
-        // .withMessage("The requested parameter is not supported by this server!"));
-        // }
-//        checkExtensions(subscribeRequest, exceptions);
         exceptions.throwIfNotEmpty();
     }
     
