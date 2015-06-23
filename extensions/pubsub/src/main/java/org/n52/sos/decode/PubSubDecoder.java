@@ -40,8 +40,6 @@ import org.n52.iceland.exception.ows.concrete.UnsupportedDecoderInputException;
 import org.n52.iceland.service.AbstractServiceCommunicationObject;
 import org.n52.iceland.util.CollectionHelper;
 import org.n52.sos.PubSubConstants;
-import org.n52.sos.request.DescribePublicationTypeRequest;
-import org.n52.sos.request.DescribeSubscriptionRequest;
 import org.n52.sos.request.RenewRequest;
 import org.n52.sos.request.SubscribeRequest;
 import org.n52.sos.request.UnsubscribeRequest;
@@ -83,17 +81,7 @@ public class PubSubDecoder implements Decoder<AbstractServiceCommunicationObject
     @Override
     public AbstractServiceCommunicationObject decode(final XmlObject xml) throws OwsExceptionReport,
             UnsupportedDecoderInputException {
-        if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.DescribePublicationType.name())) {
-            DescribePublicationTypeRequest request = new DescribePublicationTypeRequest();
-            request.setService(PubSubConstants.SERVICE);
-            request.setVersion(PubSubConstants.SERVICEVERSION);
-            return request;
-        } else if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.DescribeSubscription.name())) {
-            DescribeSubscriptionRequest request = new DescribeSubscriptionRequest();
-            request.setService(PubSubConstants.SERVICE);
-            request.setVersion(PubSubConstants.SERVICEVERSION);
-            return request;
-        } else if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.Renew.name())) {
+        if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.Renew.name())) {
             RenewRequest request = new RenewRequest();
             request.setService(PubSubConstants.SERVICE);
             request.setVersion(PubSubConstants.SERVICEVERSION);
