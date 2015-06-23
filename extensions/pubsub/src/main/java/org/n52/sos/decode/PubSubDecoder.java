@@ -40,7 +40,7 @@ import org.n52.iceland.exception.ows.concrete.UnsupportedDecoderInputException;
 import org.n52.iceland.service.AbstractServiceCommunicationObject;
 import org.n52.iceland.util.CollectionHelper;
 import org.n52.sos.PubSubConstants;
-import org.n52.sos.request.RenewRequest;
+import org.n52.sos.request.PauseSubscriptionRequest;
 import org.n52.sos.request.ResumeSubscriptionRequest;
 import org.n52.sos.request.SubscribeRequest;
 import org.n52.sos.request.UnsubscribeRequest;
@@ -84,8 +84,8 @@ public class PubSubDecoder implements Decoder<AbstractServiceCommunicationObject
     @Override
     public AbstractServiceCommunicationObject decode(final XmlObject xml) throws OwsExceptionReport,
             UnsupportedDecoderInputException {
-        if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.Renew.name())) {
-            RenewRequest request = new RenewRequest();
+        if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.PauseSubscription.name())) {
+            PauseSubscriptionRequest request = new PauseSubscriptionRequest();
             request.setService(PubSubConstants.SERVICE);
             request.setVersion(PubSubConstants.SERVICEVERSION);
             return request;

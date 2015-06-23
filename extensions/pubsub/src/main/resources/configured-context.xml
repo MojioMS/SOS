@@ -14,8 +14,10 @@
 	</bean>
 	
 	<!-- RequestOperator implementations from extension/pubsub -->
-    <bean id="pubsubSubscribeOperator" class="org.n52.sos.request.operator.SubscribeOperator"/>
-    <bean id="pubsubUnsubscribeOperator" class="org.n52.sos.request.operator.UnsubscribeOperator"/>
+    <bean id="pubsubSubscribeOperator" 			class="org.n52.sos.request.operator.SubscribeOperator"/>
+    <bean id="pubsubUnsubscribeOperator" 		class="org.n52.sos.request.operator.UnsubscribeOperator"/>
+    <bean id="pubsubPauseSubscriptionOperator" 	class="org.n52.sos.request.operator.PauseSubscriptionOperator"/>
+    <bean id="pubsubResumeSubscriptionOperator" class="org.n52.sos.request.operator.ResumeSubscriptionOperator"/>
 	
 	<!-- Decoder implementations from extension/pubsub -->
     <bean id="pubsubDecoder" class="org.n52.sos.decode.PubSubDecoder"/>
@@ -24,8 +26,9 @@
 <!--     <bean id="pubsubEncoder" class="org.n52.sos.encode.PubSubEncoder"/> -->
 
 	<!-- Handler implementations from extension/pubsub -->
-	<bean id="pubsubRenewHandler" class="org.n52.sos.handler.RenewHandler"/>
-	<bean id="pubsubSubscribeHandler" class="org.n52.sos.handler.SubscribeHandler"/>
-	<bean id="pubsubUnsubscribeHandler" class="org.n52.sos.handler.UnsubscribeHandler"/>
+	<bean id="pubsubSubscribeHandler" 			class="org.n52.sos.handler.SubscribeHandler"/>
+	<bean id="pubsubUnsubscribeHandler" 		class="org.n52.sos.handler.UnsubscribeHandler"/>
+	<bean id="pubsubPauseHandler" 				class="org.n52.sos.handler.PauseHandler"/>
+	<bean id="pubsubResumeSubscriptionHandler"	class="org.n52.sos.handler.ResumeSubscriptionHandler"/>
 
 </beans>
