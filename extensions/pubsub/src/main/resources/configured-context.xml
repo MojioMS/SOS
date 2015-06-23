@@ -15,6 +15,7 @@
 	
 	<!-- RequestOperator implementations from extension/pubsub -->
     <bean id="pubsubSubscribeOperator" class="org.n52.sos.request.operator.SubscribeOperator"/>
+    <bean id="pubsubUnsubscribeOperator" class="org.n52.sos.request.operator.UnsubscribeOperator"/>
 	
 	<!-- Decoder implementations from extension/pubsub -->
     <bean id="pubsubDecoder" class="org.n52.sos.decode.PubSubDecoder"/>
