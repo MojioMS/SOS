@@ -41,10 +41,12 @@ import org.n52.iceland.service.AbstractServiceCommunicationObject;
 import org.n52.iceland.util.CollectionHelper;
 import org.n52.sos.PubSubConstants;
 import org.n52.sos.request.RenewRequest;
+import org.n52.sos.request.ResumeSubscriptionRequest;
 import org.n52.sos.request.SubscribeRequest;
 import org.n52.sos.request.UnsubscribeRequest;
 import org.n52.sos.util.CodingHelper;
 import org.oasisOpen.docs.wsn.b2.RenewDocument;
+import org.oasisOpen.docs.wsn.b2.ResumeSubscriptionDocument;
 import org.oasisOpen.docs.wsn.b2.SubscribeDocument;
 import org.oasisOpen.docs.wsn.b2.UnsubscribeDocument;
 import org.slf4j.Logger;
@@ -58,7 +60,8 @@ public class PubSubDecoder implements Decoder<AbstractServiceCommunicationObject
             CodingHelper.decoderKeysForElements(SubscribeDocument.type.getDocumentElementName().getNamespaceURI(),
             SubscribeDocument.class,
             UnsubscribeDocument.class,
-            RenewDocument.class
+            RenewDocument.class,
+            ResumeSubscriptionDocument.class
         ),
        CodingHelper.xmlDecoderKeysForOperation(
                PubSubConstants.SERVICE, 
@@ -96,6 +99,11 @@ public class PubSubDecoder implements Decoder<AbstractServiceCommunicationObject
             request.setService(PubSubConstants.SERVICE);
             request.setVersion(PubSubConstants.SERVICEVERSION);
             return request;
+        } else if (xml.getDomNode().getFirstChild().getNodeName().contains(PubSubConstants.Operations.ResumeSubscription.name())) {
+        	ResumeSubscriptionRequest request = new ResumeSubscriptionRequest();
+        	request.setService(PubSubConstants.SERVICE);
+        	request.setVersion(PubSubConstants.SERVICEVERSION);
+        	return request;
         }
         throw new UnsupportedDecoderInputException(this, xml);
     }

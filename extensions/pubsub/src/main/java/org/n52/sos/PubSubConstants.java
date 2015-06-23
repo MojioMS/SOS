@@ -46,7 +46,7 @@ public interface PubSubConstants {
 	 *
 	 */
 	enum Operations {
-		Subscribe, DescribePublicationType, DescribeSubscription, Renew, Unsubscribe
+		Subscribe, DescribePublicationType, DescribeSubscription, Renew, Unsubscribe, ResumeSubscription
 	}
 
 	/**
