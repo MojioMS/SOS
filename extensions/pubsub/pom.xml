@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pubsub</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>52°North SOS - SOS 2.0 Pub-Sub extension</name>
     <description>52°North Sensor Observation Service Pub-Sub extension module</description>
     <properties>
@@ -71,4 +71,18 @@
             </snapshots>
         </repository>
     </repositories>
+    <dependencies>
+    	<dependency>
+    		<groupId>org.n52.iceland</groupId>
+    		<artifactId>iceland</artifactId>
+    	</dependency>
+    	<dependency>
+    		<groupId>${project.groupId}</groupId>
+    		<artifactId>api</artifactId>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.n52.sensorweb</groupId>
+    		<artifactId>52n-xml-wsn-v13</artifactId>
+    	</dependency>
+    </dependencies>
 </project>

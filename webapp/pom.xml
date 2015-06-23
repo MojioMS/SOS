@@ -466,6 +466,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>split-and-merge</artifactId>
         </dependency>
+        <!-- pub-sub extension -->
+        <dependency>
+        	<groupId>${project.groupId}</groupId>
+        	<artifactId>pubsub</artifactId>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
