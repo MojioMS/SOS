@@ -28,7 +28,7 @@
 	<!-- Handler implementations from extension/pubsub -->
 	<bean id="pubsubSubscribeHandler" 			class="org.n52.sos.handler.SubscribeHandler"/>
 	<bean id="pubsubUnsubscribeHandler" 		class="org.n52.sos.handler.UnsubscribeHandler"/>
-	<bean id="pubsubPauseHandler" 				class="org.n52.sos.handler.PauseHandler"/>
+	<bean id="pubsubPauseHandler" 				class="org.n52.sos.handler.PauseSubscriptionHandler"/>
 	<bean id="pubsubResumeSubscriptionHandler"	class="org.n52.sos.handler.ResumeSubscriptionHandler"/>
 
 </beans>
