@@ -25,6 +25,7 @@
     <!-- Encoder implementations from extension/pubsub -->
     <bean id="pubsubSubscribeEncoder" 			class="org.n52.sos.encode.SubscribeEncoder"/>
     <bean id="pubsubUnsubscribeEncoder"			class="org.n52.sos.encode.UnsubscribeEncoder"/>
+    <bean id="pubsubPauseSubscriptionEncoder"	class="org.n52.sos.encode.PauseSubscriptionEncoder"/>
 
 	<!-- Handler implementations from extension/pubsub -->
 	<bean id="pubsubSubscribeHandler" 			class="org.n52.sos.handler.SubscribeHandler"/>
