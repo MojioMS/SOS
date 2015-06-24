@@ -33,5 +33,8 @@
 	<bean id="pubsubUnsubscribeHandler" 		class="org.n52.sos.handler.UnsubscribeHandler"/>
 	<bean id="pubsubPauseHandler" 				class="org.n52.sos.handler.PauseSubscriptionHandler"/>
 	<bean id="pubsubResumeSubscriptionHandler"	class="org.n52.sos.handler.ResumeSubscriptionHandler"/>
+	
+	<!--  ServiceEventListener implementations from extension/pubsub -->
+	<bean id="pubsubEventListener"				class="org.n52.sos.event.EventListener"/>
 
 </beans>
