@@ -28,14 +28,9 @@
  */
 package org.n52.sos.encode;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.apache.xmlbeans.XmlObject;
 import org.n52.iceland.exception.ows.OwsExceptionReport;
-import org.n52.iceland.w3c.SchemaLocation;
 import org.n52.sos.PubSubConstants;
-import org.n52.sos.coding.encode.AbstractResponseEncoder;
 import org.n52.sos.response.SubscribeResponse;
 import org.oasisOpen.docs.wsn.b2.SubscribeResponseDocument;
 
@@ -44,21 +39,12 @@ import org.oasisOpen.docs.wsn.b2.SubscribeResponseDocument;
  *
  * @since 5.0.0
  */
-public class SubscribeEncoder extends AbstractResponseEncoder<SubscribeResponse> {
+public class SubscribeEncoder extends PubSubEncoder<SubscribeResponse> {
 
     public SubscribeEncoder() {
-    	super(PubSubConstants.SERVICE,
-    			PubSubConstants.SERVICEVERSION,
-    			PubSubConstants.Operations.Subscribe.name(),
-    			PubSubConstants.NS_PUBSUB,
-    			PubSubConstants.NS_PUBSUB_PREFIX,
+    	super(PubSubConstants.Operations.Subscribe,
     			SubscribeResponse.class);
     }
-
-	@Override
-	protected Set<SchemaLocation> getConcreteSchemaLocations() {
-		return Collections.singleton(new SchemaLocation(PubSubConstants.NS_PUBSUB, PubSubConstants.NS_PUBSUB_SCHEMA_LOC));
-	}
 
 	@Override
 	protected XmlObject create(SubscribeResponse response)

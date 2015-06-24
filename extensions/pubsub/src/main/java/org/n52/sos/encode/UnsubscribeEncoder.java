@@ -28,34 +28,30 @@
  */
 package org.n52.sos.encode;
 
-import java.util.Collections;
-import java.util.Set;
-
-import org.n52.iceland.response.AbstractServiceResponse;
-import org.n52.iceland.w3c.SchemaLocation;
+import org.apache.xmlbeans.XmlObject;
+import org.n52.iceland.exception.ows.OwsExceptionReport;
 import org.n52.sos.PubSubConstants;
-import org.n52.sos.coding.encode.AbstractResponseEncoder;
+import org.n52.sos.response.UnsubscribeResponse;
+import org.oasisOpen.docs.wsn.b2.UnsubscribeResponseDocument;
 
 /**
  * @author <a href="mailto:e.h.juerrens@52north.org">Eike Hinderk J&uuml;rrens</a>
- * 
- * @since 5.0.0
  *
+ * @since 5.0.0
  */
-public abstract class PubSubEncoder<T extends AbstractServiceResponse> extends AbstractResponseEncoder<T> {
+public class UnsubscribeEncoder extends PubSubEncoder<UnsubscribeResponse> {
 
-	public PubSubEncoder(PubSubConstants.Operations operation, Class<T> clazz) {
-		super(PubSubConstants.SERVICE,
-    			PubSubConstants.SERVICEVERSION,
-    			operation.name(),
-    			PubSubConstants.NS_PUBSUB,
-    			PubSubConstants.NS_PUBSUB_PREFIX,
-    			clazz);
-	}
+    public UnsubscribeEncoder() {
+    	super(PubSubConstants.Operations.Unsubscribe,
+    			UnsubscribeResponse.class);
+    }
 
 	@Override
-	protected Set<SchemaLocation> getConcreteSchemaLocations() {
-		return Collections.singleton(new SchemaLocation(PubSubConstants.NS_PUBSUB, PubSubConstants.NS_PUBSUB_SCHEMA_LOC));
+	protected XmlObject create(UnsubscribeResponse response)
+			throws OwsExceptionReport {
+		final UnsubscribeResponseDocument xbResponse = UnsubscribeResponseDocument.Factory.newInstance();
+		xbResponse.addNewUnsubscribeResponse();
+		return xbResponse;
 	}
 
 }
