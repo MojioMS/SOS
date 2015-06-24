@@ -72,7 +72,7 @@ public class UnsubscribeOperator extends
 
     @Override
     public UnsubscribeResponse receive(UnsubscribeRequest request) throws OwsExceptionReport {
-        return getOperationHandler().getUnsubscribe(request);
+        return getOperationHandler().unsubscribe(request);
     }
 
     @Override

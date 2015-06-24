@@ -46,7 +46,7 @@ public class PauseSubscriptionHandler extends AbstractOperationHandler {
         super(PubSubConstants.SERVICE, PubSubConstants.Operations.PauseSubscription.name());
     }
 
-    public PauseSubscriptionResponse getPauseSubscription(PauseSubscriptionRequest request) {
+    public PauseSubscriptionResponse pauseSubscription(PauseSubscriptionRequest request) {
     	PauseSubscriptionResponse response = new PauseSubscriptionResponse();
         response.setService(request.getService());
         response.setVersion(request.getVersion());

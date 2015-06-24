@@ -48,7 +48,7 @@ public class UnsubscribeHandler extends AbstractOperationHandler {
         super(PubSubConstants.SERVICE, PubSubConstants.Operations.Unsubscribe.name());
     }
 
-    public UnsubscribeResponse getUnsubscribe(UnsubscribeRequest request) throws PubSubProcessorException {
+    public UnsubscribeResponse unsubscribe(UnsubscribeRequest request) throws PubSubProcessorException {
         UnsubscribeResponse response = new UnsubscribeResponse();
         response.setService(request.getService());
         response.setVersion(request.getVersion());

@@ -72,7 +72,7 @@ public class PauseSubscriptionOperator extends
 
     @Override
     public PauseSubscriptionResponse receive(PauseSubscriptionRequest request) throws OwsExceptionReport {
-        return getOperationHandler().getPauseSubscription(request);
+        return getOperationHandler().pauseSubscription(request);
     }
 
     @Override

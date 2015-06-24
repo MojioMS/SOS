@@ -47,7 +47,7 @@ public class SubscribeHandler extends AbstractOperationHandler {
         super(PubSubConstants.SERVICE, PubSubConstants.Operations.Subscribe.name());
     }
 
-    public SubscribeResponse getSubscribe(SubscribeRequest request) throws PubSubProcessorException {
+    public SubscribeResponse subscribe(SubscribeRequest request) throws PubSubProcessorException {
         SubscribeResponse response = new SubscribeResponse();
         response.setService(request.getService());
         response.setVersion(request.getVersion());

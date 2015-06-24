@@ -72,7 +72,7 @@ public class SubscribeOperator extends
 
     @Override
     public SubscribeResponse receive(SubscribeRequest request) throws OwsExceptionReport {
-        return getOperationHandler().getSubscribe(request);
+        return getOperationHandler().subscribe(request);
     }
 
     @Override

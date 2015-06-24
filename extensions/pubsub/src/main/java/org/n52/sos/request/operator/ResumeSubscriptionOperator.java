@@ -72,7 +72,7 @@ public class ResumeSubscriptionOperator extends
 
     @Override
     public ResumeSubscriptionResponse receive(ResumeSubscriptionRequest request) throws OwsExceptionReport {
-        return getOperationHandler().getResumeSubscription(request);
+        return getOperationHandler().resumeSubscription(request);
     }
 
     @Override

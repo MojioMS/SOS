@@ -47,7 +47,7 @@ public class ResumeSubscriptionHandler extends AbstractOperationHandler {
         super(PubSubConstants.SERVICE, PubSubConstants.Operations.ResumeSubscription.name());
     }
 
-    public ResumeSubscriptionResponse getResumeSubscription(ResumeSubscriptionRequest request) throws PubSubProcessorException {
+    public ResumeSubscriptionResponse resumeSubscription(ResumeSubscriptionRequest request) throws PubSubProcessorException {
     	ResumeSubscriptionResponse response = new ResumeSubscriptionResponse();
         response.setService(request.getService());
         response.setVersion(request.getVersion());
