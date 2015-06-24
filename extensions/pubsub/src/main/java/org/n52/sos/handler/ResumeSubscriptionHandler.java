@@ -53,7 +53,7 @@ public class ResumeSubscriptionHandler extends AbstractOperationHandler {
         response.setVersion(request.getVersion());
         // TODO @matthesrieke Implement delegation to EPOS
         /*
-        response.setResponseString(PubSubProcessorFacade.getInstance().getProcessorInstance().processResumeSubscription(
+        response.setResponseString(EPOSFascade.getInstance().getProcessorInstance().processResumeSubscription(
         		request.getPayload()
         		).xmlText());
 		*/

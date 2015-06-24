@@ -53,7 +53,7 @@ public class SubscribeHandler extends AbstractOperationHandler {
         response.setVersion(request.getVersion());
         // TODO @matthesrieke Implement delegation to EPOS
         /*
-        response.setResponseString(PubSubProcessorFacade.getInstance().getProcessorInstance().processSubscribe(
+        response.setResponseString(EPOSFascade.getInstance().getProcessorInstance().processSubscribe(
         		request.getPayload()
         		).xmlText());
 		*/

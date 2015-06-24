@@ -55,7 +55,7 @@ public class UnsubscribeHandler extends AbstractOperationHandler {
         // TODO @matthesrieke Implement delegation to EPOS
         /*
         response.setResponseString(
-        		PubSubProcessorFacade.getInstance().getProcessorInstance().processUnsubscribe(
+        		EPOSFascade.getInstance().getProcessorInstance().processUnsubscribe(
         				request.getPayload(),
         				request.getSoapHeader()).xmlText());
         */
