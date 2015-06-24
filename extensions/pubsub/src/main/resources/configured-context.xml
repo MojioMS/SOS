@@ -23,7 +23,7 @@
     <bean id="pubsubDecoder" class="org.n52.sos.decode.PubSubDecoder"/>
 
     <!-- Encoder implementations from extension/pubsub -->
-<!--     <bean id="pubsubEncoder" class="org.n52.sos.encode.PubSubEncoder"/> -->
+    <bean id="pubsubSubscribeEncoder" class="org.n52.sos.encode.SubscribeEncoder"/>
 
 	<!-- Handler implementations from extension/pubsub -->
 	<bean id="pubsubSubscribeHandler" 			class="org.n52.sos.handler.SubscribeHandler"/>

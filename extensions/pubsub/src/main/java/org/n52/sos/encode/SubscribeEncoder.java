@@ -26,53 +26,49 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos;
+package org.n52.sos.encode;
 
-import org.n52.sos.wsdl.WSDLConstants;
-import org.n52.sos.wsdl.WSDLOperation;
+import java.util.Collections;
+import java.util.Set;
+
+import org.apache.xmlbeans.XmlObject;
+import org.n52.iceland.exception.ows.OwsExceptionReport;
+import org.n52.iceland.w3c.SchemaLocation;
+import org.n52.sos.PubSubConstants;
+import org.n52.sos.coding.encode.AbstractResponseEncoder;
+import org.n52.sos.response.SubscribeResponse;
+import org.oasisOpen.docs.wsn.b2.SubscribeResponseDocument;
 
 /**
- * Provides all constants required by the Pub-Sub-Extension.
- * 
  * @author <a href="mailto:e.h.juerrens@52north.org">Eike Hinderk J&uuml;rrens</a>
- * 
- * @since 5.0.0
  *
+ * @since 5.0.0
  */
-public interface PubSubConstants {
-	
-	/**
-	 * The operations of the pub-sub extension
-	 *
-	 */
-	enum Operations {
-		Subscribe, Unsubscribe, ResumeSubscription, PauseSubscription
+public class SubscribeEncoder extends AbstractResponseEncoder<SubscribeResponse> {
+
+    public SubscribeEncoder() {
+    	super(PubSubConstants.SERVICE,
+    			PubSubConstants.SERVICEVERSION,
+    			PubSubConstants.Operations.Subscribe.name(),
+    			PubSubConstants.NS_PUBSUB,
+    			PubSubConstants.NS_PUBSUB_PREFIX,
+    			SubscribeResponse.class);
+    }
+
+	@Override
+	protected Set<SchemaLocation> getConcreteSchemaLocations() {
+		return Collections.singleton(new SchemaLocation(PubSubConstants.NS_PUBSUB, PubSubConstants.NS_PUBSUB_SCHEMA_LOC));
 	}
 
-	/**
-	 * The service identifier for the pub-sub extension service: "PubSub"
-	 */
-	String SERVICE = "PubSub";
-	
-	/**
-	 * The service version identifier for the pub-sub extension specification that is implemented.
-	 */
-	String SERVICEVERSION = "1.0.0";
-	
-	String NS_PUBSUB = "http://www.opengis.net/pubsub/1.0/core";
-	
-	// TODO add if available
-	String NS_PUBSUB_SCHEMA_LOC = NS_PUBSUB;
-
-    String NS_PUBSUB_PREFIX = "psc";
-	
-	interface WSDLOperations extends WSDLConstants {
-		// TODO adjust to Pub-Sub values
-        WSDLOperation SUBSCRIBE = WSDLOperation.newWSDLOperation()
-                .setName(PubSubConstants.Operations.Subscribe.name()).setVersion(PubSubConstants.SERVICEVERSION)
-                /*.setRequest(SwesConstants.QN_DELETE_SENSOR).setRequestAction(SoapRequestActionUris.DELETE_SENSOR)
-                .setResponse(SwesConstants.QN_DELETE_SENSOR_RESPONSE)
-                .setResponseAction(SoapResponseActionUris.DELETE_SENSOR).setFaults(WSDLFault.DEFAULT_FAULTS)*/.build();
+	@Override
+	protected XmlObject create(SubscribeResponse response)
+			throws OwsExceptionReport {
+		final SubscribeResponseDocument xbResponse = SubscribeResponseDocument.Factory.newInstance();
+		xbResponse.addNewSubscribeResponse()
+			.addNewSubscriptionReference()
+			.addNewAddress()
+			.setStringValue(response.getResponseString());
+		return xbResponse;
 	}
 
 }
