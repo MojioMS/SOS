@@ -9,8 +9,8 @@
 
 	<!-- ServiceOperator implementations from extension/pubsub -->
 	<bean id="pubsubServiceOperator" 			class="org.n52.iceland.service.operator.GenericServiceOperator">
-		<property name="service" value="PubSub"/>
-		<property name="version" value="1.0.0"/>
+		<constructor-arg value="PubSub"/>
+		<constructor-arg value="1.0.0"/>
 	</bean>
 	
 	<!-- RequestOperator implementations from extension/pubsub -->
