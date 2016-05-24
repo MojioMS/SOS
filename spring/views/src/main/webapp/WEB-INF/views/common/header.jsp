@@ -87,6 +87,11 @@
 			                                            </a>
 			                                        </li>
 		                                    	</c:if>
+		                                    	<li>
+                                                    <a id="viewclient-menuitem" class="menu-item2" href="<c:url value="/viewclient" />">
+                                                        <span class="menu-title">SOS.js</span>
+                                                    </a> 
+                                                </li>
                                    			</ul>
                                         </li>
                                     </c:if>
