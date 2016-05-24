@@ -33,6 +33,21 @@
 * Author:  Paul M. Breen
 * Date:    2012-12-12
 * Id:      $Id$
+* License:
+
+  Copyright 2014 52°North Initiative for Geospatial Open Source Software GmbH
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 ******************************************************************************/
 
 /**
@@ -430,6 +445,37 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
       },
 
       /**
+       * Display the given message text according to the given options.
+       * If a level is specified, then the message will be formatted
+       * accordingly (see the formatMessage function), otherwise the message
+       * will be displayed as a plain informational message.
+       * If a duration (in ms) is specified, then the message will be
+       * displayed transiently
+       */
+      displayMessage: function(text, options) {
+        var options = options || {};
+        var container = jQuery("<div></div>");
+
+        if(options.level) {
+          container.addClass(options["class"] ? options["class"] : "sos-message");
+          container.html(this.formatMessage(text, options));
+        } else {
+          container.addClass(options["class"] ? options["class"] : "sos-message sos-message-box");
+          container.html(text);
+        }
+        if(options.duration) {
+          container.fadeIn({duration: options.duration});
+          container.fadeOut({duration: options.duration});
+        }
+        if(options.closeOnClick) {
+          container.bind("click", function() {container.remove();});
+        }
+        jQuery(options.containerSelector || "body").append(container);
+
+        return container;
+      },
+
+      /**
        * Display summary stats about the given selected observation data
        */
       displaySelectedIntervalStats: function(container, selected) {
@@ -501,8 +547,141 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
           }
         };
         this.config.stats.object = jQuery.plot(sp, this.config.stats.series, this.config.stats.options);
+      },
+
+      /**
+       * Construct a generic start event handler for a busy indicator
+       */
+      constructBusyIndicatorStartHandler: function(containerSelector) {
+        var f = function() {
+          // Ensure only one busy indicator active on object at any one time
+          if(!SOS.Utils.isValidObject(this.busyIndicator)) {
+            this.busyIndicator = new SOS.Ui.BusyIndicator();
+            var c = jQuery(containerSelector);
+
+            // Ensure container has a centre point to locate the busy indicator
+            if(c.length > 0) {
+              var d = c.children(".sos-container-centre");
+
+              if(d.length < 1) {
+                d = jQuery("<div/>", {"class": "sos-container-centre"});
+                c.append(d);
+              }
+              if(d.length > 0) {
+                this.busyIndicator.init({boxParent: d, boxClass: "sos-busy-indicator-box sos-centred-busy-indicator"});
+              }
+            }
+          }
+        };
+
+        return f;
+      },
+
+      /**
+       * Construct a generic end event handler for a busy indicator
+       */
+      constructBusyIndicatorEndHandler: function() {
+        var f = function() {
+          if(SOS.Utils.isValidObject(this.busyIndicator)) {
+            this.busyIndicator.stop();
+            delete this.busyIndicator;
+          }
+        };
+
+        return f;
       }
     });
+
+    /**
+     * SOS.Ui.BusyIndicator
+     * Utility object for providing visual feedback that a SOS.Ui object is
+     * busy (for example, waiting on asynchronous data over the network)
+     */
+    SOS.Ui.BusyIndicator = function () {
+      return {
+        active: true,
+        box: null,
+        pulse: null,
+        boxClass: "sos-busy-indicator-box",
+        pulseClass: "sos-busy-indicator-pulse",
+        boxParent: "body",
+        initPause: 50,            // To avoid initial stuttering (ms)
+        duration: 2000,           // Duration of pulse transition (ms)
+        pulseWidth: 60,           // Distance the pulse travels (px)
+
+        /**
+         * Initialise the busy indicator
+         */
+        init: function(options) {
+          var options = options || {};
+
+          if(this.active) {
+            this.box = jQuery("<div></div>", {
+              "class": (options.boxClass || this.boxClass)
+            });
+            this.pulse = jQuery("<div></div>", {
+              "class": (options.pulseClass || this.pulseClass)
+            });
+
+            // Remove when clicked
+            this.box.bind("click", jQuery.proxy(this.stop, this));
+
+            // Animate the pulse via custom events
+            this.pulse.bind("sosUiBusyIndicatorTransitionEnd", {self: this}, this._toggleTransition);
+
+            jQuery(options.boxParent || this.boxParent).append(this.box);
+            this.box.append(this.pulse);
+
+            /* A brief initial pause to allow the page to be rendered.  This
+               avoids initial stuttering of the pulse animation */
+            window.setTimeout(jQuery.proxy(this.animate, this), options.initPause || this.initPause);
+          }
+        },
+
+        /**
+         * Event handler for the busy indicator pulse transition animation
+         */
+        _toggleTransition: function(evt) {
+          var self = evt.data.self;
+          var pulse = self.pulse;
+
+          // Reverse the direction of the pulse
+          self.pulseWidth *= -1;
+          var leftValue = (self.pulseWidth < 0 ? "-=" : "+=") + Math.abs(self.pulseWidth) + "px";
+
+          // Animate the pulse by moving it left or right
+          pulse.animate({left: leftValue}, {
+            duration: (self.duration || 2000),   // Must be non-zero
+            complete: function() {
+              pulse.trigger("sosUiBusyIndicatorTransitionEnd");
+            }
+          });
+        },
+   
+        /**
+         * Stop the busy indicator
+         */
+        stop: function() {
+          if(this.box) {
+            this.box.remove();
+            this.box = null;
+            this.pulse = null;
+          }
+        },
+
+        /**
+         * Animate the busy indicator
+         */
+        animate: function() {
+          // Initialise the pulse to begin at the left
+          this.pulseWidth = Math.abs(this.pulseWidth) * -1;
+
+          if(this.pulse) {
+            this.pulse.trigger("sosUiBusyIndicatorTransitionEnd");
+          }
+        }
+      };
+    }
   }
 
   /* Create the SOS.Plot namespace */
@@ -867,6 +1046,7 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
         // If valueBox div doesn't exist (the norm), create one on the fly
         if(valueBox.length < 1) {
           valueBox = jQuery('<div id="#' + this.config.plot.id + 'ValueBox" class="sos-plot-valuebox" style="display:none"/>');
+          valueBox.bind("click", function() {valueBox.remove();});
           jQuery('body').after(valueBox);
         }
 
@@ -1156,7 +1336,33 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
                 headerLabel: "[%foiName%] [%name%] / [%uomTitle%]",
                 ordinateLabel: "[%name%] / [%uomTitle%]"
               },
-              scrollable: false
+              scrollable: false,
+              mergeSeries: {
+                active: false,
+                /* n is time index, and m is value index, of each series.
+                   missing is substituted if a series has no value at a given
+                   time point of the merged series table */
+                mergeOptions: {n: 0, m: 1, missing: ""},
+                /* To make best use of column header space in the merged series
+                   table, we minimise the amount of repeated metadata.  Hence,
+                   for a merged table containing data from a single FOI only,
+                   we can place FOI name in the table header (headerLabel), so
+                   as not to repeat it in each column header (ordinateLabel) */
+                singleFoi: {
+                  labelTemplates: {
+                    label: "[%foiName%] [%name%]",
+                    headerLabel: "[%foiName%]",
+                    ordinateLabel: "[%name%] / [%uomTitle%]"
+                  }
+                },
+                multipleFois: {
+                  labelTemplates: {
+                    label: "[%foiName%] [%name%]",
+                    headerLabel: "",
+                    ordinateLabel: "[%foiName%] [%name%] / [%uomTitle%]"
+                  }
+                }
+              }
             }
           },
           overview: {
@@ -1725,9 +1931,145 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
       },
 
       /**
+       * Ascertain whether the given data series contain multiple FOIs or
+       * multiple offerings, and determine the time interval
+       */
+      characteriseDataSeries: function(series) {
+        var characterisation = {
+          hasMultipleFois: false,
+          hasMultipleOfferings: false,
+          timeInterval: {start: null, end: null}
+        };
+        var first = {foiName: null, offeringName: null, time: null};
+        var last = {time: null};
+
+        for(var i = 0, len = series.length; i < len; i++) {
+          if(i == 0) {
+            first.foiName = series[i].foiName;
+            first.offeringName = series[i].offeringName;
+
+            if(SOS.Utils.isArray(series[i].data)) {
+              first.time = series[i].data[0][0];
+              last.time = series[i].data[series[i].data.length-1][0];
+            }
+          }
+          if(series[i].foiName != first.foiName) {
+            characterisation.hasMultipleFois = true;
+          }
+          if(series[i].offeringName != first.offeringName) {
+            characterisation.hasMultipleOfferings = true;
+          }
+          if(SOS.Utils.isArray(series[i].data)) {
+            first.time = Math.min(first.time, series[i].data[0][0]);
+            last.time = Math.max(last.time, series[i].data[series[i].data.length-1][0]);
+          }
+        }
+        characterisation.timeInterval.start = new Date(first.time);
+        characterisation.timeInterval.end = new Date(last.time);
+
+        return characterisation;
+      },
+
+      /**
+       * Construct appropriate metadata for a merged data series table
+       */
+      constructMergedDataSeriesMetadata: function(series, options, table) {
+        var columnHeaderTemplate = "[%foiName%] [%name%] / [%uomTitle%]";
+        var characterisation = this.characteriseDataSeries(series);
+
+        // Get the first column name (Time)
+        options.columns.names = options.columns.names.slice(0, 1);
+
+        // Minimise the amount of repeated metadata in the table/column headers
+        if(characterisation.hasMultipleFois) {
+          if(options.mergeSeries) {
+            columnHeaderTemplate = options.mergeSeries.multipleFois.labelTemplates.ordinateLabel;
+          }
+        } else {
+          if(options.mergeSeries) {
+            columnHeaderTemplate = options.mergeSeries.singleFoi.labelTemplates.ordinateLabel;
+          }
+        }
+
+        // Add each series' value column name
+        for(var i = 0, len = series.length; i < len; i++) {
+          options.columns.names.push(SOS.Utils.applyTemplate(series[i], columnHeaderTemplate));
+        }
+
+        /* Copy over all the metadata properties from the first series &
+           set the labels.  Ensure we don't overwrite the data */
+        for(var p in series[0]) {
+          if(p != "data") {
+            table[p] = series[0][p];
+          }
+        }
+        if(characterisation.hasMultipleFois) {
+          if(options.mergeSeries) {
+            table.label = SOS.Utils.applyTemplate(table, options.mergeSeries.multipleFois.labelTemplates.label);
+            table.headerLabel = SOS.Utils.applyTemplate(table, options.mergeSeries.multipleFois.labelTemplates.headerLabel);
+          }
+        } else {
+          if(options.mergeSeries) {
+            table.label = SOS.Utils.applyTemplate(table, options.mergeSeries.singleFoi.labelTemplates.label);
+            table.headerLabel = SOS.Utils.applyTemplate(table, options.mergeSeries.singleFoi.labelTemplates.headerLabel);
+          }
+        }
+
+        return table;
+      },
+
+      /**
+       * Merge the given series into a single cotemporal multi-column table
+       */
+      mergeDataSeriesAsTable: function(series, options, table) {
+        var seriesData = [];
+
+        // Get all series data as an array of arrays
+        for(var i = 0, len = series.length; i < len; i++) {
+          seriesData.push(series[i].data);
+        }
+
+        // Merge cotemporal values
+        var data = SOS.Utils.mergeSeries(seriesData, options);
+        table.data = data;
+
+        return table;
+      },
+
+      /**
+       * Merge the given series into a single cotemporal multi-column series
+       */
+      mergeDataSeries: function(series, options) {
+        var mergedSeries = [];
+        var table = this.initDataTable();
+
+        this.constructMergedDataSeriesMetadata(series, options, table);
+        this.mergeDataSeriesAsTable(series, options.mergeSeries.mergeOptions, table);
+        mergedSeries.push(table);
+
+        return mergedSeries;
+      },
+ 
+      /**
        * Generate a table of the given observation data
        */
       generateTable: function(t, series, options) {
+        var retval;
+
+        if(options.mergeSeries && options.mergeSeries.active) {
+          var mergedSeries = this.mergeDataSeries(series, options);
+          retval = this._generateTable(t, mergedSeries, options);
+        } else {
+          retval = this._generateTable(t, series, options);
+        }
+
+        return retval;
+      },
+ 
+      /**
+       * Generate a table of the given observation data
+       */
+      _generateTable: function(t, series, options) {
         var tcontent = "";
         var lengths = [];
         var ft = this.config.format.time;
@@ -1806,6 +2148,22 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
        * Generate a plain non-HTML table of the given observation data
        */
       generatePlainDataTable: function(t, series, options) {
+        var retval;
+
+        if(options.mergeSeries && options.mergeSeries.active) {
+          var mergedSeries = this.mergeDataSeries(series, options);
+          retval = this._generatePlainDataTable(t, mergedSeries, options);
+        } else {
+          retval = this._generatePlainDataTable(t, series, options);
+        }
+
+        return retval;
+      },
+
+      /**
+       * Generate a plain non-HTML table of the given observation data
+       */
+      _generatePlainDataTable: function(t, series, options) {
         var tcontent = "";
         var lengths = [];
         var ft = this.config.format.time;
@@ -1825,9 +2183,9 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
 
         tcontent += commentCharacter;
 
-        // Series header label (with plain non-HTML UOMs)
+        // Series header label
         for(var i = 0, len = series.length; i < len; i++) {
-          tcontent += series[i].label + (series[i].uom.length > 0 ? " / " + series[i].uom : "");
+          tcontent += series[i].headerLabel;
 
           if(i < len - 1) {
             tcontent += columnSeparator;
@@ -2074,10 +2432,13 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
               }
             }
           },
-          featureOfInterestLayer: {
+          // We can have multiple FOI layers, but must have at least one
+          featureOfInterestLayers: [{
             object: null,
             id: "sosMapFeatureOfInterestLayer",
             options: {
+              visibility: true,   // Initially checked in layerswitcher
+              showBusyIndicatorOnLoad: true,
               label: "Feature Of Interest",
               pointStyle: new OpenLayers.Style({
                 "pointRadius": 5,
@@ -2101,9 +2462,15 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
                   xy: null
                 }
               },
-              displayLatestObservations: false
+              displayLatestObservations: false,
+              // Override to filter which FOIs are displayed
+              foiFilter: function(fois) {return fois;},
+              // Optional OL vector layer properties
+              params: {
+              }
             }
-          },
+          }],
+          addFeatureOfInterestLayersInReverseOrder: false,
           latestObservationsPopup: {
             active: true,
             caption: "Latest Values",
@@ -2114,6 +2481,8 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
             ]
           }
         };
+        // The default FOI layer
+        this.config.featureOfInterestLayer = this.config.featureOfInterestLayers[0];
         jQuery.extend(true, this, options);
       },
 
@@ -2179,7 +2548,7 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
         this.initOverviewMap();
         this.initBaseLayer();
         this.initView();
-        this.initFeatureOfInterestLayer();
+        this.initFeatureOfInterestLayers();
         this.config.isInitLoad = false;
       },
  
@@ -2249,12 +2618,29 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
           map.zoomToMaxExtent();
         }
       },
-  
+
       /**
-       * Initialise the feature-of-interest layer
+       * Construct event handlers to manage the FOI layer's load behaviour
        */
-      initFeatureOfInterestLayer: function() {
-        var styleMap = new OpenLayers.StyleMap(this.config.featureOfInterestLayer.options.pointStyle);
+      constructFeatureOfInterestLayerLoadHandlers: function(config) {
+        config.options.params = config.options.params || {};
+        config.options.params.eventListeners = config.options.params.eventListeners || {};
+        config.options.params.eventListeners.scope = config.options.params.eventListeners.scope || this;
+        var scope = config.options.params.eventListeners.scope;
+
+        /* Show a busy indicator whilst the FOI layer is loading.  If the user
+           has specified a scope, then the busy indicator calls run in that
+           scope */
+        config.options.params.eventListeners.loadstart = scope.constructBusyIndicatorStartHandler("#" + this.config.map.id);
+        config.options.params.eventListeners.loadend = scope.constructBusyIndicatorEndHandler();
+      },
+
+      /**
+       * Construct a feature-of-interest layer from the given config
+       */
+      constructFeatureOfInterestLayer: function(config) {
+        var params = config.options.params || {};
+        var styleMap = new OpenLayers.StyleMap(config.options.pointStyle);
 
         var protocolFormatOptions = {
           internalProjection: this.config.map.object.getProjectionObject(),
@@ -2264,31 +2650,87 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
         /* Allows the coordinate order in layer CRS to be explicitly
            specified.  For example, the OpenLayers default for EPSG:4326 is
            false = yx = lat/lon, but some SOS instances return lon/lat */
-        if(SOS.Utils.isValidObject(this.config.featureOfInterestLayer.options.crs.format.xy)) {
-          protocolFormatOptions.xy = this.config.featureOfInterestLayer.options.crs.format.xy;
+        if(SOS.Utils.isValidObject(config.options.crs.format.xy)) {
+          protocolFormatOptions.xy = config.options.crs.format.xy;
         }
 
-        // Query FOIs from the SOS and present them as a vector layer
-        var layer = new OpenLayers.Layer.Vector(this.config.featureOfInterestLayer.options.label, {
+        // Configure optional and required layer parameters
+        jQuery.extend(true, params, {
           strategies: [new OpenLayers.Strategy.Fixed()],
           protocol: new OpenLayers.Protocol.SOS({
             formatOptions: protocolFormatOptions,
             url: this.sos.config.post.url,
-            fois: this.sos.getFeatureOfInterestIds()
+            fois: config.options.foiFilter(this.sos.getFeatureOfInterestIds())
           }),
           styleMap: styleMap
         });
-        this.config.map.object.addLayer(layer);
 
-        // Setup behaviour for this layer
-        var ctrl = new OpenLayers.Control.SelectFeature(layer, {
+        // Query FOIs from the SOS and present them as a vector layer
+        var layer = new OpenLayers.Layer.Vector(config.options.label, params);
+        config.object = layer;
+      },
+
+      /**
+       * Setup event handlers to manage the FOI layers' behaviour
+       */
+      setupFeatureOfInterestLayersBehaviour: function(layers) {
+        // Setup behaviour for the given array of layers
+        var ctrl = new OpenLayers.Control.SelectFeature(layers, {
           scope: this,
           onSelect: this.featureOfInterestSelectHandler
         });
         this.config.map.object.addControl(ctrl);
         ctrl.activate();
+      },
 
-        this.config.featureOfInterestLayer.object = layer;
+      /**
+       * Initialise the given feature-of-interest layer.  If no layer config
+       * is passed, then the default FOI layer is initialised
+       */
+      initFeatureOfInterestLayer: function(config) {
+        var config = config || this.config.featureOfInterestLayer;
+
+        if(!SOS.Utils.isArray(config)) {
+          config = [config];
+        }
+
+        return this._initFeatureOfInterestLayers(config);
+      },
+
+      /**
+       * Initialise all the feature-of-interest layers
+       */
+      initFeatureOfInterestLayers: function() {
+        return this._initFeatureOfInterestLayers(this.config.featureOfInterestLayers);
+      },
+
+      /**
+       * Initialise all the feature-of-interest layers
+       */
+      _initFeatureOfInterestLayers: function(configs) {
+        var layers = [];
+
+        /* Create each layer from its config, then add the layers to the map,
+           and setup a single select handler for all layers */
+        for(var i = 0, len = configs.length; i < len; i++) {
+          // Optionally show a busy indicator when loading this layer
+          if(configs[i].options.showBusyIndicatorOnLoad) {
+            this.constructFeatureOfInterestLayerLoadHandlers(configs[i]);
+          }
+          this.constructFeatureOfInterestLayer(configs[i]);
+
+          // Optionally set this layer's initial checked state in layerswitcher
+          if(configs[i].options.visibility != null) {
+            configs[i].object.setVisibility(configs[i].options.visibility);
+          }
+          layers.push(configs[i].object);
+        }
+
+        if(this.config.addFeatureOfInterestLayersInReverseOrder) {
+          layers.reverse();
+        }
+        this.config.map.object.addLayers(layers);
+        this.setupFeatureOfInterestLayersBehaviour(layers);
       },
 
       /**
@@ -2449,14 +2891,18 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
                 onSelect: function(s, ui) {jQuery(this).trigger('change');}
               },
               offerings: {
-                useFqn: false
+                useFqn: false,
+                // Override to filter which menu entries are displayed
+                entryFilter: function(entries) {return entries;}
               },
               observedProperties: {
                 /* Toggle fully-qualified name (FQN) in menus.  For example:
                    FQN: "urn:ogc:def:phenomenon:OGC:1.0.30:air_temperature"
                    Name: "Air Temperature"
                    If useFqn is false, we use Name, otherwise FQN */
-                useFqn: false
+                useFqn: false,
+                // Override to filter which menu entries are displayed
+                entryFilter: function(entries) {return entries;}
               },
               createNewItem: false,
               promptForSelection: true,
@@ -2584,6 +3030,7 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
       displayOfferings: function() {
         var tab = jQuery('#' + this.config.menu.id + 'OfferingsTab');
         this.constructOfferingsEntries();
+        this.filterOfferingsEntries();
         this.initMenu(tab);
         this.setupOfferingsBehaviour();
         this.constructOfferingsTabControls();
@@ -2633,6 +3080,15 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
       },
 
       /**
+       * Filter the offerings menu entries
+       */
+      filterOfferingsEntries: function() {
+        if(this.config.menu.options.offerings.entryFilter) {
+          this.config.menu.entries = this.config.menu.options.offerings.entryFilter(this.config.menu.entries);
+        }
+      },
+
+      /**
        * Setup event handlers to manage the offerings menu behaviour
        */
       setupOfferingsBehaviour: function() {
@@ -2678,6 +3134,9 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
           if(options.showPrompt) {
             tab.append('<p/>', mOpts.searchOfferings.prompt);
           }
+          /* This class sets the z-index of the tab panel, to ensure that the
+             autocomplete list is above other objects, such as the map */
+          tab.addClass("sos-menu-search-box-container");
           tab.append('<p/>', this.constructSearchOfferingsInput());
         }
 
@@ -2701,6 +3160,7 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
 
         // Clone the offerings entries as source for the search autocomplete
         this.constructOfferingsEntries({filterOnFOI: false});
+        this.filterOfferingsEntries();
         var src = this.config.menu.entries.slice(0);
 
         /* Create an autocomplete search box with placeholder text.  Filter
@@ -2765,6 +3225,7 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
       displayObservedProperties: function() {
         var tab = jQuery('#' + this.config.menu.id + 'ObservedPropertiesTab');
         this.constructObservedPropertiesEntries();
+        this.filterObservedPropertiesEntries();
         this.initMenu(tab);
         this.setupObservedPropertiesBehaviour();
         this.promptForSelection(tab);
@@ -2793,6 +3254,15 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
             var entry = {value: ids[i], label: names[i]};
             this.config.menu.entries.push(entry);
           }
+        }
+      },
+
+      /**
+       * Filter the observed properties menu entries
+       */
+      filterObservedPropertiesEntries: function() {
+        if(this.config.menu.options.observedProperties.entryFilter) {
+          this.config.menu.entries = this.config.menu.options.observedProperties.entryFilter(this.config.menu.entries);
         }
       },
 
@@ -3235,6 +3705,44 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
       },
 
       /**
+       * Filter the given entries array according to the given filter.  The
+       * filter object can have one of either an include list or an exclude
+       * list of regular expressions.  The regular expression is tested
+       * against each entry's value and label
+       */
+      filterEntries: function(origEntries, filter) {
+        var entries = [];
+
+        if(filter.include && filter.include.length > 0) {
+          for(var i = 0, olen = origEntries.length; i < olen; i++) {
+            for(var j = 0, flen = filter.include.length; j < flen; j++) {
+              if(filter.include[j].test(origEntries[i].value) || filter.include[j].test(origEntries[i].label)) {
+                entries.push(origEntries[i]);
+              }
+            }
+          }
+        } else if(filter.exclude && filter.exclude.length > 0) {
+          for(var i = 0, olen = origEntries.length; i < olen; i++) {
+            var inExcludeList = false;
+
+            for(var j = 0, flen = filter.exclude.length; j < flen; j++) {
+              if(filter.exclude[j].test(origEntries[i].value) || filter.exclude[j].test(origEntries[i].label)) {
+                inExcludeList = true;
+                break;
+              }
+            }
+            if(inExcludeList == false) {
+              entries.push(origEntries[i]);
+            }
+          }
+        } else {
+          entries = origEntries;
+        }
+
+        return entries;
+      },
+
+      /**
        * Create a new selected item.  The index is returned
        */
       setNewItem: function(item) {
@@ -3626,7 +4134,79 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
           s.html(this.config.info.content);
         }
       },
- 
+
+      /**
+       * Set the content for this info panel and then highlight it, according
+       * to the given options.  If a class is specified, then the info panel
+       * is transitioned to that class, then back to its original.  If a
+       * background colour is specified, then the info panel is transitioned
+       * to that colour, then back to its original.  A duration (in ms)
+       * specifies the speed of the transition
+       */
+      highlightContent: function(content, options) {
+        var options = options || {};
+
+        if(SOS.Utils.isValidObject(this.config.info.object)) {
+          var dom = {
+            parentContainer: this.config.info.object,
+            container: this.config.info.object.children("." + this.config.info.options.contentSection["class"])
+          };
+
+          if(options.duration) {
+            if(options["class"]) {
+              this.highlightByClass(dom, content, options);
+            } else if(options.backgroundColor) {
+              this.highlightByBackgroundColor(dom, content, options);
+            } else {
+              this.updateContent(content);  // No options so just update
+            }
+          } else {
+            this.updateContent(content);    // No options so just update
+          }
+        }
+      },
+
+      /**
+       * Highlight by adding the given class, and then removing it
+       */
+      highlightByClass: function(dom, content, options) {
+        dom.container.css({display: "none"});
+        dom.container.addClass(options["class"]);
+        this.updateContent(content);
+
+        dom.container.fadeIn({duration: options.duration});
+        dom.container.fadeOut({
+          duration: options.duration,
+          complete: function() {
+            if(options["class"]) {
+              dom.container.removeClass(options["class"]);
+            }
+            dom.container.css({display: "block"});
+            dom.container.html(content);
+          }
+        });
+      },
+
+      /**
+       * Highlight by transitioning the background colour to the given colour,
+       * and then back to the original
+       */
+      highlightByBackgroundColor: function(dom, content, options) {
+        var origBackgroundColor = dom.parentContainer.css("background-color");
+        this.updateContent(content);
+
+        dom.container.animate({
+          backgroundColor: options.backgroundColor
+          }, {
+          duration: options.duration,
+          complete: function() {
+            dom.container.animate({
+              backgroundColor: origBackgroundColor
+            }, options.duration);
+          }
+        });
+      },
+
       /**
        * Set the content for this info panel and then display it
        */
@@ -3869,6 +4449,7 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
                 table: {table: {options: {scrollable: true}}},
                 menu: {menu: {step: -1}}
               },
+              showBusyIndicatorOnLoad: true,
               info: SOS.App.Resources.config.app.options.info
             }
           },
@@ -4074,13 +4655,20 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
           scope: components.infoMetadata,
           callback: function() {
             var ft = this.config.format.time;
-            var c = this.sos.SOSCapabilities.serviceIdentification.title;
-            if(SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime)) {
-              c += "<p/>Data Availability<br/>"
-              + "Starts: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.minValue) + "<br/>"
-              + "Ends: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.maxValue) + "<br/>";
+            var c = "";
+            if(SOS.Utils.isValidObject(this.sos.SOSCapabilities.serviceIdentification) && self.isValidParameter(this.sos.SOSCapabilities.serviceIdentification.title)) {
+              c = this.sos.SOSCapabilities.serviceIdentification.title;
             }
-            this.updateContent(c);
+            if(SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime) && SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues) && SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range)) {
+              if(self.isValidParameter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.minValue) && self.isValidParameter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.maxValue)) {
+                c += "<p/>Data Availability<br/>"
+                + "Starts: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.minValue) + "<br/>"
+                + "Ends: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.maxValue) + "<br/>";
+              }
+            }
+            if(self.isValidParameter(c)) {
+              this.updateContent(c);
+            }
           }
         });
 
@@ -4089,13 +4677,20 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
           scope: components.infoMetadata,
           callback: function() {
             var ft = this.config.format.time;
-            var c = this.sos.SOSCapabilities.serviceIdentification.title;
-            if(SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime)) {
-              c += "<p/>Data Availability<br/>"
-              + "Starts: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.minValue) + "<br/>"
-              + "Ends: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.maxValue) + "<br/>";
+            var c = "";
+            if(SOS.Utils.isValidObject(this.sos.SOSCapabilities.serviceIdentification) && self.isValidParameter(this.sos.SOSCapabilities.serviceIdentification.title)) {
+              c = this.sos.SOSCapabilities.serviceIdentification.title;
             }
-            this.updateContent(c);
+            if(SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime) && SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues) && SOS.Utils.isValidObject(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range)) {
+              if(self.isValidParameter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.minValue) && self.isValidParameter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.maxValue)) {
+                c += "<p/>Data Availability<br/>"
+                + "Starts: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.minValue) + "<br/>"
+                + "Ends: " + ft.formatter(this.sos.SOSCapabilities.operationsMetadata.GetObservation.parameters.eventTime.allowedValues.range.maxValue) + "<br/>";
+              }
+            }
+            if(self.isValidParameter(c)) {
+              this.updateContent(c);
+            }
           }
         });
 
@@ -4487,6 +5082,11 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
             components.table.config.mode.append = item.options.addToExisting;
           }
 
+          // Show a busy indicator whilst the observation data are loading
+          if(this.config.app.options.showBusyIndicatorOnLoad) {
+            this.startBusyIndicator("#" + this.config.app.id);
+          }
+
           this.getObservationData();
         }
       },
@@ -4814,6 +5414,10 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
         components.plot.offering = this.offering;
         components.table.offering = this.offering;
 
+        if(this.config.app.options.showBusyIndicatorOnLoad) {
+          this.stopBusyIndicator();
+        }
+
         // Make the plot tab the active tab, then draw the plot & table
         jQuery('#' + this.config.app.id + 'PlotPanel').html("");
         jQuery('#' + this.config.app.id + 'PlotTab a').trigger('click');
@@ -4831,6 +5435,40 @@ if(typeof OpenLayers !== "undefined" && OpenLayers !== null &&
 
         // For external listeners (application-level plumbing)
         this.sos.events.triggerEvent("sosAppDrawObservationData");
+      },
+
+      /**
+       * Start a busy indicator
+       */
+      startBusyIndicator: function(containerSelector) {
+        // Ensure only one busy indicator active on object at any one time
+        if(!SOS.Utils.isValidObject(this.busyIndicator)) {
+          this.busyIndicator = new SOS.Ui.BusyIndicator();
+          var c = jQuery(containerSelector);
+
+          // Ensure container has a centre point to locate the busy indicator
+          if(c.length > 0) {
+            var d = c.children(".sos-container-centre");
+
+            if(d.length < 1) {
+              d = jQuery("<div/>", {"class": "sos-container-centre"});
+              c.append(d);
+            }
+            if(d.length > 0) {
+              this.busyIndicator.init({boxParent: d, boxClass: "sos-busy-indicator-box sos-app-busy-indicator sos-centred-busy-indicator"});
+            }
+          }
+        }
+      },
+
+      /**
+       * Stop the previously started busy indicator
+       */
+      stopBusyIndicator: function() {
+        if(SOS.Utils.isValidObject(this.busyIndicator)) {
+          this.busyIndicator.stop();
+          delete this.busyIndicator;
+        }
       }
     });
 
