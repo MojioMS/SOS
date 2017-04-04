@@ -1,14 +1,15 @@
 /* colors */
+/* main menu */
 /* mobile */
 .diagram .axisTarget {
   cursor: pointer;
 }
 .diagram .axisTarget:hover {
-  background-color: #bde6f3;
+  background-color: #ff9f00;
   opacity: 0.4;
 }
 .diagram .axisTarget.selected {
-  background-color: #66c5e4;
+  background-color: #004890;
   opacity: 0.4;
 }
 .diagram .axisLabel {
@@ -45,6 +46,7 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .diagram {
   bottom: 145px !important;
@@ -73,7 +75,7 @@
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+0&0.65+0,0.65+0,0.65+0,0.65+4,0.65+4,0.65+5,0.65+5,0.65+9,0.65+11,0+73 */
   /*background: -moz-radial-gradient(center, cirle,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.65) 4%, rgba(0,0,0,0.65) 5%, rgba(0,0,0,0.65) 9%, rgba(0,0,0,0.65) 11%, rgba(0,0,0,0) 73%);  FF3.6-15 */
   /*background: -webkit-radial-gradient(center, circle,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 4%,rgba(0,0,0,0.65) 5%,rgba(0,0,0,0.65) 9%,rgba(0,0,0,0.65) 11%,rgba(0,0,0,0) 73%);  Chrome10-25,Safari5.1-6 */
-  background: radial-gradient(#66c5e4 0%, rgba(102, 197, 228, 0) 60%);
+  background: radial-gradient(#ffffff 0%, rgba(255, 255, 255, 0) 60%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=1 );  IE6-9 fallback on horizontal gradient */
 }
@@ -85,7 +87,7 @@
   top: 50%;
   left: 50%;
   margin: -15px 0 0 -15px;
-  color: #626250;
+  color: #004890;
 }
 #overviewChart flot {
   position: absolute;
@@ -94,17 +96,19 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 #tooltip {
   position: absolute;
   display: none;
   padding: 1px;
-  background-color: #66c5e4;
-  color: #626250;
+  background-color: #ffffff;
+  color: #004890;
   z-index: 9999;
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .datetimepicker {
   padding: 4px;
@@ -463,33 +467,35 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .btn {
-  color: #626250;
+  color: #004890;
 }
 .btn:hover {
-  background-color: #bde6f3;
-  color: #626250;
-  border-color: #bde6f3;
+  background-color: #ff9f00;
+  color: #004890;
+  border-color: #ff9f00;
 }
 .btn-subtitle {
   font-size: 70%;
 }
 .btn-primary {
-  background-color: #66c5e4;
-  border-color: #66c5e4;
-  color: #626250;
+  background-color: #004890;
+  border-color: #004890;
+  color: #ffffff;
 }
 .btn-primary:hover {
-  background-color: #bde6f3;
-  border-color: #bde6f3;
+  background-color: #ff9f00;
+  border-color: #ff9f00;
 }
 .btn-default:hover {
-  background-color: #bde6f3;
-  color: #626250;
+  background-color: #ff9f00;
+  color: #004890;
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .flag {
   width: 16px;
@@ -1251,6 +1257,7 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .icon-spin {
   display: inline-block;
@@ -1301,6 +1308,7 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .loadingNotifier {
   position: absolute;
@@ -1311,12 +1319,13 @@
   height: 70px;
   padding: 5px;
   opacity: 0.8;
-  background-color: #66c5e4;
+  background-color: #ffffff;
   border-radius: 10px;
   text-align: center;
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .modal-content {
   border: 0px solid white;
@@ -1324,31 +1333,33 @@
 .modal-content .modal-header {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  background-color: #626250;
+  background-color: #004890;
 }
 .modal-content .modal-header .close {
-  color: white;
+  color: #ffffff;
   opacity: 1;
 }
 .modal-content .modal-header .modal-title {
-  color: white;
+  color: #ffffff;
   /*            text-align: center;
             background-repeat: no-repeat;
             background-image: url("../images/favicon.ico");*/
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .panel-group {
   padding: 5px;
   margin-bottom: 0px;
-  color: #626250;
+  color: #004890;
 }
 .panel-group .panel-heading {
-  color: #626250;
+  color: #004890;
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .btn-file {
   position: relative;
@@ -1374,21 +1385,21 @@
   overflow: auto;
 }
 .favorites .favorite-container {
-  color: #626250;
+  color: #004890;
   padding: 5px;
 }
 .favorites .favorite-container .favorite-entry {
-  border: 1px solid #626250;
+  border: 1px solid #004890;
   word-break: break-all;
 }
 .favorites .favorite-container .favorite-entry:hover {
   cursor: pointer;
-  background-color: #bde6f3;
+  background-color: #ff9f00;
 }
 .favorites .favorite-container .favorite-entry .favorite-header {
   padding: 5px;
   font-size: 120%;
-  background-color: rgba(102, 197, 228, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 .favorites .favorite-container .favorite-entry .favorite-header .header-label {
   overflow: hidden;
@@ -1410,7 +1421,7 @@
   margin: 5px;
 }
 .favorites .favorite-container .favorite-entry .favorite-body-entry + .favorite-body-entry {
-  border-top: 1px solid rgba(98, 98, 80, 0.3);
+  border-top: 1px solid rgba(0, 72, 144, 0.3);
   padding-top: 5px;
 }
 .import-export-btns {
@@ -1425,6 +1436,7 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .timeseries-styling .colorButton {
   height: 30px;
@@ -1441,6 +1453,7 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .legendItem {
   background-color: white;
@@ -1521,6 +1534,7 @@
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 body,
 html,
@@ -1589,14 +1603,21 @@ html,
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .navbar-default {
   border-color: white;
-  background-color: #626250;
+  background-color: #004890;
 }
 .navbar-default .navbar-header .navbar-brand {
   cursor: default;
-  color: white;
+  color: #004890;
+  width: 240px;
+  margin: 0 auto;
+  background: url(http://www.nexosproject.eu/sites/all/themes/nexosproject/images/set_nexos_new2.svg) 0 3px no-repeat;
+  background-size: 600px;
+  background-color: white;
+  display: block;
 }
 .navbar-default .navbar-header .navbar-header-text {
   margin-left: 10px;
@@ -1610,17 +1631,17 @@ html,
 }
 .navbar-default .navbar-nav > li > a:hover {
   color: white;
-  background-color: #66c5e4;
+  background-color: #ff9f00;
   cursor: pointer;
 }
 .navbar-default .navbar-nav > .active > a {
   color: white;
-  background-color: #66c5e4;
+  background-color: #ff9f00;
 }
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: white;
-  background-color: #66c5e4;
+  background-color: #ff9f00;
 }
 .navbar-default .navbar-toggle {
   border: none;
@@ -1653,6 +1674,7 @@ html,
  * --------------------------------------------------
  */
 /* colors */
+/* main menu */
 /* mobile */
 html,
 body {
@@ -1738,6 +1760,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .map-control {
   z-index: 100;
@@ -1747,14 +1770,15 @@ footer {
   border-width: 0px;
 }
 .map-control a {
-  color: #626250;
+  color: #004890;
 }
 .map-control:hover {
-  background-color: #bde6f3;
+  background-color: #ff9f00;
   opacity: 1;
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .layers-control {
   position: absolute;
@@ -1795,6 +1819,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .locate-control {
   position: absolute;
@@ -1805,6 +1830,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .leaflet-control-zoom,
 .leaflet-control-layers {
@@ -1820,6 +1846,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .phenomena a:hover {
   text-decoration: none;
@@ -1829,16 +1856,16 @@ footer {
   border-radius: 8px;
   margin: 3px 0px 3px 0px;
   word-break: break-all;
-  color: #626250;
+  color: #004890;
 }
 .phenomena .item:hover {
-  background-color: #bde6f3;
-  color: #626250;
+  background-color: #ff9f00;
+  color: #004890;
   cursor: pointer;
 }
 .phenomena .item.selected {
-  background-color: #66c5e4;
-  color: #626250;
+  background-color: #004890;
+  color: #ffffff;
 }
 .phenomena .phenomena-list {
   margin-top: 30px;
@@ -1858,9 +1885,10 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .provider-list {
-  color: #626250;
+  color: #004890;
 }
 .provider-list .provider-item {
   padding: 5px;
@@ -1872,12 +1900,12 @@ footer {
 }
 .provider-list .provider-item:hover {
   cursor: pointer;
-  background-color: #bde6f3;
-  color: #626250;
+  background-color: #ff9f00;
+  color: #004890;
 }
 .provider-list .provider-item.selected {
-  background-color: #66c5e4;
-  color: #626250;
+  background-color: #004890;
+  color: #ffffff;
 }
 .provider-list .provider-item .delete-user-added {
   float: right;
@@ -1890,6 +1918,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .search-control {
   position: absolute;
@@ -1903,9 +1932,10 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .stationContent {
-  color: #626250;
+  color: #004890;
 }
 .stationContent .tsItem {
   word-break: break-all;
@@ -1921,6 +1951,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .zoom-control {
   position: absolute;
@@ -1931,6 +1962,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .procedure-metadata table > tbody > tr > td {
   padding: 2px;
@@ -1943,6 +1975,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .combi-mobile {
   height: 100%;
@@ -2023,6 +2056,19 @@ footer {
 }
 
 /* colors */
+/* main menu */
+/* mobile */
+.eu-logo {
+  width: 81px;
+  background: url('../../images/set_nexos_new2.svg') -580px -12px;
+  background-size: 1120px;
+  display: block;
+  height: 55px;
+  margin: 20px auto 20px auto;
+}
+
+/* colors */
+/* main menu */
 /* mobile */
 #collapseSettings {
   text-align: center;
@@ -2040,7 +2086,7 @@ footer {
 }
 .permalink .item:hover {
   cursor: pointer;
-  background-color: #bde6f3;
+  background-color: #ff9f00;
 }
 .permalink .item + .item {
   margin-top: 8px;
@@ -2071,6 +2117,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 #tableView {
   overflow: auto;
@@ -2099,6 +2146,7 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */
 .time-content {
   /* show datepicker dropdown menu in modal window */
@@ -2124,4 +2172,5 @@ footer {
 }
 
 /* colors */
+/* main menu */
 /* mobile */

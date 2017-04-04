@@ -1,31 +1,3 @@
-/*
- * Copyright (C) 2012-2017 52°North Initiative for Geospatial Open Source
- * Software GmbH
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 as published
- * by the Free Software Foundation.
- *
- * If the program is linked with libraries which are licensed under one of
- * the following licenses, the combination of the program with the linked
- * library is not considered a "derivative work" of the program:
- *
- *     - Apache License, version 2.0
- *     - Apache Software License, version 1.0
- *     - GNU Lesser General Public License, version 3
- *     - Mozilla Public License, versions 1.0, 1.1 and 2.0
- *     - Common Development and Distribution License (CDDL), version 1.0
- *
- * Therefore the distribution of the program linked with libraries licensed
- * under the aforementioned licenses, is permitted by the copyright holders
- * if the distribution is compliant with both the GNU General Public
- * License version 2 and the aforementioned licenses.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
- */
 var mainApp = angular.module('jsClient', [
     'ngRoute',
     'ui.bootstrap',
@@ -36,13 +8,11 @@ var mainApp = angular.module('jsClient', [
     'ngSanitize',
     'ngTable',
     'ngResource',
-    'n52.core.alert',
     'n52.core.barChart',
-    'n52.core.color',
+    'n52.core.base',
     'n52.core.dataLoading',
     'n52.core.diagram',
     'n52.core.exportTs',
-    'n52.core.favorite',
     'n52.core.favoriteUi',
     'n52.core.flot',
     'n52.core.helper',
@@ -60,56 +30,59 @@ var mainApp = angular.module('jsClient', [
     'n52.core.metadata',
     'n52.core.modal',
     'n52.core.overviewDiagram',
-    'n52.core.permalinkEval',
-    'n52.core.permalinkGen',
     'n52.core.phenomena',
     'n52.core.provider',
-    'n52.core.rawDataOutput',
     'n52.core.userSettings',
-    'n52.core.settings',
-    'n52.core.sosMetadata',
     'n52.core.startup',
-    'n52.core.status',
     'n52.core.style',
-    'n52.core.styleTs',
     'n52.core.table',
-    'n52.core.time',
     'n52.core.timeUi',
-    'n52.core.timeseries',
-    'n52.core.tooltip',
-    'n52.core.translateSelector',
-    'n52.core.utils',
-    'n52.core.yAxisHide',
+    'n52.core.translate',
     'n52.client.navigation',
     'n52.client.map',
-    'n52.client.mobile'
+    'n52.core.mobile'
 ]);
 
 mainApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'templates/views/diagramView.html',
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/diagram', {
             templateUrl: 'templates/views/diagramView.html',
             name: 'navigation.diagram',
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/map', {
             templateUrl: 'templates/views/mapView.html',
             name: 'navigation.map',
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/mobileDiagram', {
             templateUrl: 'templates/views/combiView.html',
             name: 'navigation.trajectories',
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/favorite', {
             templateUrl: 'templates/views/favoriteView.html',
             name: 'navigation.favorite',
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/map/provider', {
             name: 'navigation.provider',
@@ -117,7 +90,10 @@ mainApp.config(['$routeProvider', function($routeProvider) {
                 controller: 'SwcProviderListModalCtrl',
                 templateUrl: 'templates/map/provider-list-modal.html'
             },
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/diagram/listSelection', {
             name: 'navigation.listSelection',
@@ -125,7 +101,10 @@ mainApp.config(['$routeProvider', function($routeProvider) {
                 controller: 'ModalWindowCtrl',
                 templateUrl: 'templates/listSelection/modal-list-selection.html'
             },
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .when('/diagram/settings', {
             name: 'navigation.settings',
@@ -133,30 +112,51 @@ mainApp.config(['$routeProvider', function($routeProvider) {
                 controller: 'SwcUserSettingsWindowCtrl',
                 templateUrl: 'templates/settings/user-settings-modal.html'
             },
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                templates: 'templates'
+            }
         })
         .otherwise({
             redirectTo: '/'
         });
 }]);
 
-mainApp.config(['$translateProvider', 'settingsServiceProvider', function($translateProvider, settingsServiceProvider) {
-    $translateProvider.useStaticFilesLoader({
-        prefix: 'i18n/',
-        suffix: '.json'
-    });
-    var suppLang = [];
-    angular.forEach(settingsServiceProvider.$get().supportedLanguages, function(lang) {
-        suppLang.push(lang.code);
-    });
-    $translateProvider.registerAvailableLanguageKeys(suppLang);
-    $translateProvider.determinePreferredLanguage();
-    if ($translateProvider.preferredLanguage() === '' ||
-        suppLang.indexOf($translateProvider.preferredLanguage()) === -1) {
-        $translateProvider.preferredLanguage('en');
+mainApp.service('templates', ['$templateCache', '$http', '$q',
+    function($templateCache, $http, $q) {
+        var promises = [];
+        promises.push($http.get("templates/templates.json").then(response => {
+            return $q.all(response.data.map(template => {
+                return $http.get(template.url).then((response) => {
+                    $templateCache.put(template.id, response.data);
+                });
+            }));
+        }));
+
+        return $q.all(promises);
     }
-    $translateProvider.useSanitizeValueStrategy(null);
-}]);
+]);
+
+mainApp.config(['$translateProvider', 'settingsServiceProvider', '$locationProvider',
+    function($translateProvider, settingsServiceProvider, $locationProvider) {
+        $translateProvider.useStaticFilesLoader({
+            prefix: 'i18n/',
+            suffix: '.json'
+        });
+        $locationProvider.hashPrefix('');
+        var suppLang = [];
+        angular.forEach(settingsServiceProvider.$get().supportedLanguages, function(lang) {
+            suppLang.push(lang.code);
+        });
+        $translateProvider.registerAvailableLanguageKeys(suppLang);
+        $translateProvider.determinePreferredLanguage();
+        if ($translateProvider.preferredLanguage() === '' ||
+            suppLang.indexOf($translateProvider.preferredLanguage()) === -1) {
+            $translateProvider.preferredLanguage('en');
+        }
+        $translateProvider.useSanitizeValueStrategy(null);
+    }
+]);
 
 mainApp.filter('objectCount', function() {
     return function(item) {
