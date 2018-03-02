@@ -103,17 +103,17 @@ public class SplitMergeObservations
     private static final Set<RequestResponseModifierKeyType> REQUEST_RESPONSE_MODIFIER_KEY_TYPES = getKeyTypes();
     private boolean includeResultTimeForMerging = false;
     private boolean checkForDuplicity = false;
-    
-    
+
+
     @Setting(ServiceSettings.INCLUDE_RESULT_TIME_FOR_MERGING)
     public void setIncludeResultTimeForMerging(boolean includeResultTimeForMerging) {
         this.includeResultTimeForMerging = includeResultTimeForMerging;
     }
-    
+
     @Setting(ServiceSettings.CHECK_FOR_DUPLICITY)
     public void setCheckForDuplicity(boolean checkForDuplicity) {
         this.checkForDuplicity = checkForDuplicity;
-    } 
+    }
 
     private static Set<RequestResponseModifierKeyType> getKeyTypes() {
         Set<String> services = Sets.newHashSet(SosConstants.SOS);
@@ -255,19 +255,19 @@ public class SplitMergeObservations
         ObservationValue<?> value = null;
 
         if (observationType.equalsIgnoreCase(OmConstants.OBS_TYPE_TRUTH_OBSERVATION)) {
-            value = new SingleObservationValue<Boolean>(new BooleanValue(Boolean.parseBoolean(valueString)));
+            value = new SingleObservationValue<>(new BooleanValue(Boolean.parseBoolean(valueString)));
         } else if (observationType.equalsIgnoreCase(OmConstants.OBS_TYPE_COUNT_OBSERVATION)) {
-            value = new SingleObservationValue<Integer>(new CountValue(Integer.parseInt(valueString)));
+            value = new SingleObservationValue<>(new CountValue(Integer.parseInt(valueString)));
         } else if (observationType.equalsIgnoreCase(OmConstants.OBS_TYPE_MEASUREMENT)) {
             final QuantityValue quantity = new QuantityValue(Double.parseDouble(valueString));
             quantity.setUnit(getUom(resultDefinitionField));
-            value = new SingleObservationValue<Double>(quantity);
+            value = new SingleObservationValue<>(quantity);
         } else if (observationType.equalsIgnoreCase(OmConstants.OBS_TYPE_CATEGORY_OBSERVATION)) {
             final CategoryValue cat = new CategoryValue(valueString);
             cat.setUnit(getUom(resultDefinitionField));
-            value = new SingleObservationValue<String>(cat);
+            value = new SingleObservationValue<>(cat);
         } else if (observationType.equalsIgnoreCase(OmConstants.OBS_TYPE_TEXT_OBSERVATION)) {
-            value = new SingleObservationValue<String>(new TextValue(valueString));
+            value = new SingleObservationValue<>(new TextValue(valueString));
         }
         // TODO Check for missing types
         if (value != null) {
