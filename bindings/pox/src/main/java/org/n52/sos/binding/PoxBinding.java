@@ -84,7 +84,7 @@ public class PoxBinding extends SimpleBinding {
             throws OwsExceptionReport {
         XmlObject doc = XmlHelper.parseXmlSosRequest(request);
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.debug("XML-REQUEST: {}", doc.xmlText());
+            LOGGER.trace("XML-REQUEST: {}", doc.xmlText());
         }
         Decoder<?, XmlObject> decoder =
                 getDecoder(CodingHelper.getDecoderKey(doc));
