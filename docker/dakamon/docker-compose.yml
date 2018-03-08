@@ -1,0 +1,67 @@
+#
+# With this docker-compose file, you get three containers:
+# - a tomcat
+# - a nginx proxy
+# - a postgresql database server
+# 
+# http://localhost:80/ redirects to the /52n-sos-webapp and uses the latest version of the tomcat M.x branch with Java 8 JRE.
+#
+# When configuring the SOS, please use the following information:
+# - Datasource configuration
+#   - datasource: PostgreSQL/PostGIS
+#   - host: db
+# Everything else could be used with the default values.
+# Feel free to comment out the tomcat version you do not need.
+#
+# Just run docker-compose up in the directory of this file.
+#
+# The current proxy configuration secures the context /52n-sos-webapp with user "test:test"
+version: '3'
+services:
+  db:
+    image: mdillon/postgis:9.5-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=sos
+    # update start-up script to delete not required stuff and set-up sos-database
+    volumes:
+      - "./sos-init.sql:/docker-entrypoint-initdb.d/zz_sos_init.sql"
+    container_name: db
+    networks:
+      mynet:
+        ipv4_address: 172.52.0.101
+  sos:
+    build: .
+    image: sos:dakamon
+    ports:
+      - 8080:8080
+      - 8000:8000
+    links:
+      - db:postgres
+    depends_on:
+      - db
+    environment:
+      - JPDA_ADDRESS=8000
+      - JPDA_TRANSPORT=dt_socket
+    container_name: sos
+    command: ["catalina.sh", "jpda", "run"]
+    networks:
+      mynet:
+        ipv4_address: 172.52.0.102
+  shiny:
+    image: shiny-server:dakamon
+    ports:
+      - 3838:3838
+      container_name: shiny
+      networks:
+        mynet:
+          ipv4_address: 172.52.103
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.52.0.0/24
