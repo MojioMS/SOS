@@ -217,7 +217,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
             throws CodedException;
 
     protected abstract void addSpecificRestrictions(Criteria c, GetObservationRequest request) throws CodedException;
-    
+
     public abstract ObservationFactory getObservationFactory();
 
     protected Series getOrInsert(ObservationContext ctx, final Session session) throws CodedException {
@@ -232,14 +232,16 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
             series.setDeleted(false);
             series.setPublished(ctx.isPublish());
             series.setHiddenChild(ctx.isHiddenChild());
-        } else if (series.isDeleted()) {
-            series.setDeleted(false);
-        } else if (ctx.isSetSeriesType() && !series.isSetSeriesType()) {
-            ctx.addValuesToSeries(series);
-        } else if (ctx.isPublish() && !series.isPublished()) {
-            series.setPublished(true);
         } else {
-            return series;
+            if (series.isDeleted()) {
+                series.setDeleted(false);
+            } else if (ctx.isSetSeriesType() && !series.isSetSeriesType()) {
+                ctx.addValuesToSeries(series);
+            } else if (ctx.isPublish() && !series.isPublished()) {
+                series.setPublished(true);
+            } else {
+                return series;
+            }
         }
         session.saveOrUpdate(series);
         session.flush();
@@ -313,7 +315,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
         LOGGER.debug("QUERY getSeriesCriteria(request): {}", HibernateHelper.getSqlString(c));
         return c;
     }
-    
+
     public Criteria getSeriesCriteria(Collection<String> procedures, Collection<String> observedProperties,
             Collection<String> features, Session session) {
         final Criteria c = createCriteriaFor(procedures, observedProperties, features, session);
@@ -405,7 +407,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
         c.createCriteria(Series.FEATURE_OF_INTEREST, "foi").add(Restrictions.in(FeatureOfInterest.IDENTIFIER, features));
 
     }
-    
+
     /**
      * Add observedProperty restriction to Hibernate Criteria
      *
@@ -669,7 +671,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
         }
         return pte;
     }
-    
+
     /**
      * Create series query criteria for parameter
      *
@@ -748,7 +750,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
             addResultfilter(c, request.getResultFilter(), identifier);
         }
     }
-    
+
     private void addResultfilter(Criteria c, ComparisonFilter resultFilter, SubQueryIdentifier identifier) throws CodedException {
         Criterion resultFilterExpression = ResultFilterRestrictions.getResultFilterExpression(resultFilter,
                 getResultFilterClasses(), Series.ID, AbstractSeriesObservation.SERIES, identifier);
@@ -756,7 +758,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
             c.add(resultFilterExpression);
         }
     }
-    
+
     protected void checkAndAddSpatialFilterCriterion(Criteria c, GetDataAvailabilityRequest request,
             Session session) throws OwsExceptionReport {
         if (request.hasSpatialFilter()) {
@@ -777,7 +779,7 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
             }
         }
     }
-    
+
     protected void checkAndAddSpatialFilterCriterion(Criteria c, GetObservationRequest request,
             Session session) throws OwsExceptionReport {
         if (request.isSetSpatialFilter()) {
@@ -792,13 +794,13 @@ public abstract class AbstractSeriesDAO extends AbstractIdentifierNameDescriptio
             }
         }
     }
-    
+
     public ResultFilterClasses getResultFilterClasses() {
         return new ResultFilterClasses(getObservationFactory().numericClass(), getObservationFactory().countClass(),
                 getObservationFactory().textClass(), getObservationFactory().categoryClass(),
                 getObservationFactory().complexClass(), getObservationFactory().profileClass());
     }
-    
+
     protected boolean isIncludeChildObservableProperties() {
         return ServiceConfiguration.getInstance().isIncludeChildObservableProperties();
     }
