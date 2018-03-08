@@ -31,7 +31,7 @@ services:
       - "./sos-init.sql:/docker-entrypoint-initdb.d/zz_sos_init.sql"
     container_name: db
     networks:
-      mynet:
+      network:
         ipv4_address: 172.52.0.101
   sos:
     build: .
@@ -49,7 +49,7 @@ services:
     container_name: sos
     command: ["catalina.sh", "jpda", "run"]
     networks:
-      mynet:
+      network:
         ipv4_address: 172.52.0.102
   shiny:
     image: shiny-server:dakamon
@@ -57,10 +57,10 @@ services:
       - 3838:3838
       container_name: shiny
       networks:
-        mynet:
           ipv4_address: 172.52.103
+      network:
 networks:
-  mynet:
+  network:
     driver: bridge
     ipam:
       config:
