@@ -55,9 +55,9 @@ services:
     image: shiny-server:dakamon
     ports:
       - 3838:3838
-      container_name: shiny
-      networks:
           ipv4_address: 172.52.103
+    container_name: shiny
+    networks:
       network:
 networks:
   network:
