@@ -56,6 +56,10 @@ services:
     ports:
       - 3838:3838
           ipv4_address: 172.52.103
+    depends_on:
+      - db
+    links:
+      - db:postgres
     container_name: shiny
     networks:
       network:
