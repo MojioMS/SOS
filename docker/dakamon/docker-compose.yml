@@ -55,7 +55,6 @@ services:
     image: shiny-server:dakamon
     ports:
       - 3838:3838
-          ipv4_address: 172.52.103
     depends_on:
       - db
     links:
@@ -63,6 +62,7 @@ services:
     container_name: shiny
     networks:
       network:
+        ipv4_address: 172.52.0.103
 networks:
   network:
     driver: bridge
