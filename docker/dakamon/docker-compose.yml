@@ -1,21 +1,5 @@
 #
-# With this docker-compose file, you get three containers:
-# - a tomcat
-# - a nginx proxy
-# - a postgresql database server
-# 
-# http://localhost:80/ redirects to the /52n-sos-webapp and uses the latest version of the tomcat M.x branch with Java 8 JRE.
 #
-# When configuring the SOS, please use the following information:
-# - Datasource configuration
-#   - datasource: PostgreSQL/PostGIS
-#   - host: db
-# Everything else could be used with the default values.
-# Feel free to comment out the tomcat version you do not need.
-#
-# Just run docker-compose up in the directory of this file.
-#
-# The current proxy configuration secures the context /52n-sos-webapp with user "test:test"
 version: '3'
 services:
   db:
