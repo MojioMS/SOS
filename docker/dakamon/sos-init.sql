@@ -1005,3 +1005,148 @@ CREATE TABLE observablepropertyrelation (
                    REFERENCES observableproperty (observablepropertyid) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
                 CONSTRAINT observablepropertyparentfk FOREIGN KEY (parentobservablepropertyid)
                    REFERENCES observableproperty (observablepropertyid) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION);
+CREATE SEQUENCE public.codespaceid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.codespaceid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.featureofinterestid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.featureofinterestid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.featureofinteresttypeid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.featureofinteresttypeid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.observablepropertyid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.observablepropertyid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.observationconstellationid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.observationconstellationid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.observationid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.observationid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.observationtypeid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.observationtypeid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.offeringid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.offeringid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.parameterid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.parameterid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.procdescformatid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.procdescformatid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.procedureid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.procedureid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.relatedfeatureid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.relatedfeatureid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.relatedfeatureroleid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.relatedfeatureroleid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.relatedobservationid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.relatedobservationid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.resulttemplateid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.resulttemplateid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.seriesid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.seriesid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.unitid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.unitid_seq
+  OWNER TO postgres;
+CREATE SEQUENCE public.validproceduretimeid_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.validproceduretimeid_seq
+  OWNER TO postgres;
+
