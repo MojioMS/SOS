@@ -38,9 +38,6 @@
       "oct": "Okt",
       "nov": "Nov",
       "dec": "Dez"
-    },
-    "permalink": {
-      "useTimeParameter": "Derzeitigen gewählten Zeitraum im Permalink verwenden"
     }
   },
   "table": {
@@ -50,9 +47,7 @@
     "provider": "Datenanbieter",
     "serviceUrl": "Service-URL",
     "stations": "Stationen",
-    "platforms": "Platformen",
     "timeseries": "Zeitreihen",
-    "datasets": "Datensätze",
     "phenomena": "Phänomene",
     "selectAll": "Selektiere alle Anbieter"
   },
@@ -178,8 +173,7 @@
     }
   },
   "permalink": {
-    "noMatchingTimeseriesFound": "Keine passende Zeitreihe gefunden.",
-    "optionsHeader": "Permalink Optionen:"
+    "noMatchingTimeseriesFound": "Keine passende Zeitreihe gefunden."
   },
   "guide": {
     "start": {
