@@ -54,12 +54,17 @@ footer {
   background: #fff;
 }
 
+a:hover,
 #landing-page-buttons a:hover,
 #landing-page-buttons a:hover div.icon span,
 #landing-page-buttons a:hover div.caption,
 #landing-page-buttons a:hover div.explanation {
     text-decoration: none;
     color: #e85511;
+}
+
+a:hover img {
+	box-shadow: 4px 4px 10px rgba(232,85,17,0.8);
 }
 
 #landing-page-buttons a:hover div.landing-page-button {
