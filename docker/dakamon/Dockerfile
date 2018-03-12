@@ -14,20 +14,20 @@ RUN apt-get update &&\
     cd series-rest-api &&\
     git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
-    mvn install &&\
-    cd .. &&\
-    git clone https://github.com/EHJ-52n/dao-series-api.git &&\
+    mvn install -DskipTests=true &&\
+    cd ..
+RUN git clone https://github.com/EHJ-52n/dao-series-api.git &&\
     cd dao-series-api &&\
     git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
-    mvn install &&\
-    cd .. &&\
-    git clone https://github.com/EHJ-52n/SOS.git &&\
+    mvn install -DskipTests=true &&\
+    cd ..
+RUN git clone https://github.com/EHJ-52n/SOS.git &&\
     cd SOS &&\
     git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
-    mvn clean package -DskipTests=true -P-check &&\
-    mv /tmp/SOS/webapp/target/52n-sos-webapp /usr/local/tomcat/webapps/ &&\
+    mvn package -DskipTests=true -P-check
+RUN mv /tmp/SOS/webapp/target/52n-sos-webapp /usr/local/tomcat/webapps/ &&\
     rm -rfv /tmp/SOS &&\
     rm -rfv /usr/local/tomcat/webapps/docs &&\
     rm -rfv /usr/local/tomcat/webapps/examples &&\
