@@ -13,6 +13,7 @@ services:
     # update start-up script to delete not required stuff and set-up sos-database
     volumes:
       - "./sos-init.sql:/docker-entrypoint-initdb.d/zz_sos_init.sql"
+      - "./dakamon-sos-db:/var/lib/postgresql/data"
     container_name: db
     networks:
       network:
@@ -30,6 +31,10 @@ services:
     environment:
       - JPDA_ADDRESS=8000
       - JPDA_TRANSPORT=dt_socket
+    volumes:
+      - "./configuration.db:/usr/local/tomcat/webapps/52n-sos-webapp/configuration.db"
+      - "./settings.json:/usr/local/tomcat/webapps/52n-sos-webapp/static/client/helgoland/settings.json"
+      - "./application.properties:/usr/local/tomat/webapps/52n-sos-webapp/WEB-INF/classes/application.properties"
     container_name: sos
     command: ["catalina.sh", "jpda", "run"]
     networks:
