@@ -9,8 +9,8 @@ WORKDIR /tmp
 RUN apt-get update &&\
     apt-get --assume-yes upgrade &&\
     apt-get dist-upgrade --assume-yes &&\
-    apt-get install --assume-yes --no-install-recommends openjdk-8-jdk maven git && \
-    git clone https://github.com/EHJ-52n/series-rest-api.git &&\
+    apt-get install --assume-yes --no-install-recommends openjdk-8-jdk maven git
+RUN git clone https://github.com/EHJ-52n/series-rest-api.git &&\
     cd series-rest-api &&\
     git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
