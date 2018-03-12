@@ -12,19 +12,16 @@ RUN apt-get update &&\
     apt-get install --assume-yes --no-install-recommends openjdk-8-jdk maven git
 RUN git clone https://github.com/EHJ-52n/series-rest-api.git &&\
     cd series-rest-api &&\
-    git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
     mvn install -DskipTests=true &&\
     cd ..
 RUN git clone https://github.com/EHJ-52n/dao-series-api.git &&\
     cd dao-series-api &&\
-    git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
     mvn install -DskipTests=true &&\
     cd ..
 RUN git clone https://github.com/EHJ-52n/SOS.git &&\
     cd SOS &&\
-    git fetch --all &&\
     git checkout -b distribution/dakamon origin/distribution/dakamon &&\
     mvn package -DskipTests=true -P-check
 RUN mv /tmp/SOS/webapp/target/52n-sos-webapp /usr/local/tomcat/webapps/ &&\

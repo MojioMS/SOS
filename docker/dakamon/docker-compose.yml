@@ -34,7 +34,7 @@ services:
     volumes:
       - "./configuration.db:/usr/local/tomcat/webapps/52n-sos-webapp/configuration.db"
       - "./settings.json:/usr/local/tomcat/webapps/52n-sos-webapp/static/client/helgoland/settings.json"
-      - "./application.properties:/usr/local/tomat/webapps/52n-sos-webapp/WEB-INF/classes/application.properties"
+      - "./application.properties:/usr/local/tomcat/webapps/52n-sos-webapp/WEB-INF/classes/application.properties"
     container_name: sos
     command: ["catalina.sh", "jpda", "run"]
     networks:
