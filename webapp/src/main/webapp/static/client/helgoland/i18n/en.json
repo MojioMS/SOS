@@ -38,6 +38,9 @@
       "oct": "Oct",
       "nov": "Nov",
       "dec": "Dec"
+    },
+    "permalink": {
+      "useTimeParameter": "Use current selected time period in permalink"
     }
   },
   "table": {
@@ -47,7 +50,9 @@
     "provider": "Provider",
     "serviceUrl": "Service-URL",
     "stations": "Stations",
+    "platforms": "Platforms",
     "timeseries": "Timeseries",
+    "datasets": "Datasets",
     "phenomena": "Phenomena",
     "selectAll": "Select all provider"
   },
@@ -173,7 +178,8 @@
     }
   },
   "permalink": {
-    "noMatchingTimeseriesFound": "No matching timeseries is found."
+    "noMatchingTimeseriesFound": "No matching timeseries is found.",
+    "optionsHeader": "Permalink options:"
   },
   "guide": {
     "start": {

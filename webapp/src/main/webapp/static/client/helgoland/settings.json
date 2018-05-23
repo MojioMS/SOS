@@ -5,12 +5,12 @@
   "aggregateServices": true,
   "saveStatus": true,
   "restApiUrls": {
-        "http://localhost:8080/52n-sos-webapp/api/": "localhost"
-    },
-    "defaultProvider": {
-        "serviceID": "1",
-        "apiUrl": "http://localhost:8080/52n-sos-webapp/api/"
-    },
+    "http://localhost:8080/52n-sos-webapp/api/": "localhost"
+  },
+  "defaultProvider": {
+    "serviceID": "1",
+    "url": "http://localhost:8080/52n-sos-webapp/api/"
+  },
   "chartOptions": {
     "yaxis": {
       "tickDecimals": 2
@@ -20,16 +20,16 @@
       "fill": true
     }
   },
-  "supportedLanguages": [
-    {
-      "code": "de",
-      "label": "Deutsch"
-    },
-    {
-      "code": "en",
-      "label": "English"
-    }
-  ],
+  "supportedLanguages": [{
+    "code": "de",
+    "label": "Deutsch"
+  }, {
+    "code": "en",
+    "label": "English"
+  }, {
+    "code": "pt",
+    "label": "Portuguese"
+  }],
   "selectColorFromList": true,
   "colorList": [
     "#078D53",
@@ -94,5 +94,17 @@
       "group": "Raster"
     }
   },
-  "showScale": true
+  "showScale": true,
+  "timebufferFactor": 0.1,
+  "solveLabels": false,
+  "proxyUrl": "https://cors-anywhere.herokuapp.com/",
+  "menuItems": [
+    "diagram",
+    "map",
+    "favorite",
+    "provider",
+    "listSelection",
+    "settings"
+  ],
+  "datelineMarkerGrouping": false
 }
